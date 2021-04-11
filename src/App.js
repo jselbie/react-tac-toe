@@ -3,6 +3,12 @@ import './App.css';
 import BoardModel from './BoardModel.js';
 import React, {useEffect, useState} from 'react';
 
+function clamp(val, min, max) {
+  if (val < min) return min;
+  if (val > max) return max;
+  return val;
+}
+
 const AreaSquare = (props) => {
   var coordinates = props.left.toString() + "," + props.top.toString() + "," + props.right.toString() + "," + props.bottom.toString();
   return <area coords={coordinates} shape="rect" onClick={props.callback} />
@@ -39,46 +45,28 @@ const Board = (props) => {
   };
 
   const onMouseEnter = (event) => {
-    
-    // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element/42111623#42111623
+  
+  // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element/42111623#42111623
 
     console.log("onMouseEnter", event.clientX, event.clientY);
-    let boardDiv = document.getElementById("boarddiv");
-    let boardImg = document.getElementById("boardimg");
 
-    if (boardDiv && boardImg) {
-      var boardRect = boardDiv.getBoundingClientRect();
-      var imgRect = boardImg.getBoundingClientRect();
+    let divRect = document.getElementById("div_img_board").getBoundingClientRect();
+    let imgRect = document.getElementById("img_board").getBoundingClientRect();
 
-      console.log("boardRect", Math.floor(boardRect.left), Math.floor(boardRect.top), Math.floor(boardRect.right), Math.floor(boardRect.bottom));
-      console.log("imgRect", Math.floor(imgRect.left), Math.floor(imgRect.top), Math.floor(imgRect.right), Math.floor(imgRect.bottom));
+    let normalizedY = clamp(Math.floor(event.clientY - imgRect.top), 0, 600);
+    let row = clamp(Math.floor(normalizedY / 200), 0, 2);
 
-      var x = event.clientX - imgRect.left;
-      var y = event.clientY - imgRect.top;
-      console.log("normalized position", x, y);
+    let normalizedX = clamp(Math.floor(event.clientX - imgRect.left), 0, 600);
+    let col = clamp(Math.floor(normalizedX / 200), 0, 2);
+    
+    console.log("setting hover index to:", row*3);
 
-      x = Math.floor(x / 200);
-      y = Math.floor(y / 200);
+    setHoverIndex(row*3+col);
+  }
 
-      if ((x >= 3) || (y >= 3)) {
-        setHoverIndex(-1);
-      } else {
-        console.log("setting hover index to ", y*3+x);
-        setHoverIndex(y*x+3);
-      }
-
-    }
-
-
-
-    //setHoverIndex(cellNum);
-  };
 
   const onMouseLeave = (cellNum) => {
-    console.log("onMouseLeave", cellNum);
-    //if (hoverIndex === cellNum) {
-    //  setHoverIndex(-1);
-    //}
+      setHoverIndex(-1);
   };
 
   const GenerateAreaSquare = (cellNum) => {
@@ -91,12 +79,12 @@ const Board = (props) => {
 
 
   return(
-    <div id="boarddiv" style={styles} onMouseMove={onMouseEnter} onMouseOut={onMouseLeave}>
-      <img id="boardimg" src="board.png" useMap="#boardmap"  />
+    <div id="div_img_board" style={styles} onMouseMove={onMouseEnter} onMouseOut={onMouseLeave}>
+      <img id="img_board" src="board.png" useMap="#boardmap"  />
 
       {cellIndices.map(index=>  <CellImage cellIndex={index} cellValue={boardState[index]} /> )}
 
-      {cellIndices.map(index=>  (index===hoverIndex)?<CellImage cellIndex={index} cellValue={props.playerIsX?1:2} hover={true} />:<></> )};
+      {cellIndices.map(index=>  (index===hoverIndex && !boardState[index])?<CellImage cellIndex={index} cellValue={props.playerIsX?1:2} hover={true} />:<></> )};
 
       <map id="boardmap" name="boardmap" style={{position:"absolute"}} >
         {cellIndices.map(cellNum => GenerateAreaSquare(cellNum))}
