@@ -48,7 +48,7 @@ const Board = (props) => {
   
   // https://stackoverflow.com/questions/3234256/find-mouse-position-relative-to-element/42111623#42111623
 
-    console.log("onMouseEnter", event.clientX, event.clientY);
+    //console.log("onMouseEnter", event.clientX, event.clientY);
 
     let divRect = document.getElementById("div_img_board").getBoundingClientRect();
     let imgRect = document.getElementById("img_board").getBoundingClientRect();
@@ -59,7 +59,7 @@ const Board = (props) => {
     let normalizedX = clamp(Math.floor(event.clientX - imgRect.left), 0, 600);
     let col = clamp(Math.floor(normalizedX / 200), 0, 2);
     
-    console.log("setting hover index to:", row*3);
+    //console.log("setting hover index to:", row*3);
 
     setHoverIndex(row*3+col);
   }
@@ -99,13 +99,13 @@ const Controls = (props) => {
   const [playerIsX, setPlayerIsX] = useState(true);
 
   const onChangeHandler = (event) => {
-    console.log("onChangeHandler: ", event.target.value);
+    //console.log("onChangeHandler: ", event.target.value);
     var playerIsXUpdated = event.target.value==="first"
     setPlayerIsX(playerIsXUpdated);
   };
 
   const onSubmit = () => {
-    console.log("onSubmit", playerIsX);
+    //console.log("onSubmit", playerIsX);
     props.onNewGame(playerIsX);
   }
 
@@ -143,12 +143,9 @@ const DumpBoard = (cells) => {
 
 const BoardDiv = (props) => {
 
-  let [boardModel, setBoardModel] = useState(null);
-
-  if (boardModel === null) {
-    boardModel = new BoardModel(true);
-    setBoardModel(boardModel);
-  }
+  let [boardModel, setBoardModel] = useState( () => {
+    return new BoardModel();  // lazy state initialization
+  });
 
   var styles = {
     backgroundColor:"Silver",
@@ -159,7 +156,7 @@ const BoardDiv = (props) => {
   };
 
   const cellCallback = (cellNum) => {
-    console.log("click on cell: ", cellNum);
+    //console.log("click on cell: ", cellNum);
     boardModel.playerMakeMove(cellNum);
     setBoardModel(boardModel.clone());
   };
@@ -192,7 +189,7 @@ const BoardDiv = (props) => {
 };
 
 const App = () => {
-  console.log("RENDERING APP");
+  //console.log("RENDERING APP");
   return (
    <BoardDiv/>
   );
