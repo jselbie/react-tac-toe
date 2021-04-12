@@ -1,3 +1,11 @@
+# About
+
+A simple tic tac toe game implementing in React and Javascript. The computer is a worthy opponent.
+
+-------------------------------------------
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
