@@ -84,7 +84,13 @@ const Board = (props) => {
 
       {cellIndices.map(index=>  <CellImage cellIndex={index} cellValue={boardState[index]} /> )}
 
-      {cellIndices.map(index=>  (index===hoverIndex && !boardState[index])?<CellImage cellIndex={index} cellValue={props.playerIsX?1:2} hover={true} />:<></> )};
+      {cellIndices.map(  (index) => {
+          if (index===hoverIndex && !boardState[index]) {
+            return ( <CellImage cellIndex={index} cellValue={props.playerIsX?1:2} hover={true} /> );
+          }
+          return (<></>);
+      })}
+
 
       <map id="boardmap" name="boardmap" style={{position:"absolute"}} >
         {cellIndices.map(cellNum => GenerateAreaSquare(cellNum))}
@@ -144,7 +150,7 @@ const DumpBoard = (cells) => {
 const BoardDiv = (props) => {
 
   let [boardModel, setBoardModel] = useState( () => {
-    return new BoardModel();  // lazy state initialization
+    return new BoardModel(true);  // lazy state initialization
   });
 
   var styles = {
