@@ -197,7 +197,10 @@ const BoardDiv = (props) => {
 const App = () => {
   //console.log("RENDERING APP");
   return (
+   <div>
    <BoardDiv/>
+   <center>Source code here: <a href="https://www.github.com/jselbie/react-tac-toe">https://www.github.com/jselbie/react-tac-toe</a></center>
+   </div>
   );
 };
 
