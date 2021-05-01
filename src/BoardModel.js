@@ -9,8 +9,8 @@ class BoardModel
         this.TIE = 3;
 
         this.boardState = [0,0,0,  0,0,0,  0,0,0];
-        this.winner = this.UNSPECIFIED; // 0 is no winer, 1 is X, 2 is Y, 3 is TIE
-        this.localPlayerValue = (playerIsX ? this.X : this.Y);
+        this.winner = this.UNSPECIFIED; // 0 is no winer, 1 is X, 2 is O, 3 is TIE
+        this.localPlayerValue = (playerIsX ? this.X : this.O);
 
         if (!playerIsX) {
             this._computerMakeMove();
@@ -107,15 +107,15 @@ class BoardModel
 
     _applyMove(cellIndex, playerValue) {
 
+        console.log("_applyMove", cellIndex, playerValue);
+
         console.assert(this.boardState[cellIndex] === this.UNSPECIFIED);
 
         this.boardState[cellIndex] = playerValue;
 
         if (this._checkForWin(this.boardState, playerValue)) {
             this.winner = playerValue;
-        }
-
-        if (this._checkForTie()) {
+        } else if (this._checkForTie()) {
             this.winner = 3;
         }
 
